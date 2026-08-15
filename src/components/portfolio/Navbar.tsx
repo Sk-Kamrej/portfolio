@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-reveal";
-import { profile } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 
 const links = [
   { id: "about", label: "About" },
+  { id: "academics", label: "Academics" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "research", label: "Research" },
@@ -13,7 +13,7 @@ const links = [
   { id: "contact", label: "Contact" },
 ];
 
-export function Navbar() {
+export function Navbar({ name, resumeUrl }: { name: string; resumeUrl: string | null }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const ids = useMemo(() => links.map((l) => l.id), []);
@@ -48,17 +48,17 @@ export function Navbar() {
           href="#hero"
           className="font-display text-sm font-bold uppercase tracking-[0.28em] text-foreground transition-colors hover:text-primary"
         >
-          {profile.name}
+          {name}
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
             <li key={l.id}>
               <a
                 href={`#${l.id}`}
                 aria-current={active === l.id ? "true" : undefined}
                 className={cn(
-                  "relative rounded-full px-3.5 py-2 text-sm transition-colors",
+                  "relative rounded-full px-3 py-2 text-sm transition-colors",
                   active === l.id
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground",
@@ -74,14 +74,18 @@ export function Navbar() {
               </a>
             </li>
           ))}
-          <li>
-            <a
-              href="#contact"
-              className="ml-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-            >
-              Let's Connect
-            </a>
-          </li>
+          {resumeUrl && (
+            <li>
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="ml-2 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
+              >
+                <Download className="h-3.5 w-3.5" /> Resume
+              </a>
+            </li>
+          )}
         </ul>
 
         <button
@@ -89,7 +93,7 @@ export function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? "Close menu" : "Open menu"}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground md:hidden"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground lg:hidden"
         >
           <Menu
             className={cn(
@@ -108,8 +112,8 @@ export function Navbar() {
 
       <div
         className={cn(
-          "glass overflow-hidden transition-[max-height,opacity] duration-400 md:hidden",
-          open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0",
+          "glass overflow-hidden transition-[max-height,opacity] duration-500 lg:hidden",
+          open ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0",
         )}
       >
         <ul className="flex flex-col gap-1 px-5 py-4">
@@ -136,6 +140,18 @@ export function Navbar() {
               </a>
             </li>
           ))}
+          {resumeUrl && (
+            <li>
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-1 block rounded-lg bg-primary/10 px-3 py-3 text-base text-primary"
+              >
+                Download Resume
+              </a>
+            </li>
+          )}
         </ul>
       </div>
     </header>
