@@ -1,46 +1,24 @@
+import type { CurrentStatus, Profile } from "@/lib/site-types";
 import { Section, Reveal } from "./Section";
 
-const currently = [
-  { label: "Education", value: "BCA Honours with Research" },
-  { label: "Focus", value: "Software Development + AI/ML" },
-  { label: "Interests", value: "Research • Technology • Real-world Problem Solving" },
-  { label: "Goal", value: "Build meaningful technology and pursue advanced research" },
-];
+export function About({
+  profile,
+  currentStatus,
+}: {
+  profile: Profile;
+  currentStatus: CurrentStatus[];
+}) {
+  const paragraphs = profile.bio.split("\n").filter((p) => p.trim().length > 0);
 
-const traits = [
-  "Learning through real projects",
-  "Curiosity about how systems work",
-  "Interest in AI/ML",
-  "Software development",
-  "Research mindset",
-  "Product thinking",
-  "Continuous learning",
-];
-
-export function About() {
   return (
     <Section id="about" eyebrow="About" title="More than a student.">
       <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
         <Reveal className="space-y-5 text-base leading-relaxed text-muted-foreground">
-          <p>
-            I&apos;m currently pursuing BCA Honours with Research, and most of what I know has come
-            from building things rather than only reading about them. Software development is where
-            I started, and it is still where I spend most of my time — writing code, breaking it,
-            and understanding why it broke.
-          </p>
-          <p>
-            Alongside that, I&apos;ve been drawn to artificial intelligence and machine learning,
-            not as a buzzword but as a set of tools with real limitations worth understanding. My
-            research track pushes me to ask better questions: what problem is actually being solved,
-            what does the data say, and what happens when the model is wrong?
-          </p>
-          <p>
-            I care about product thinking as much as implementation. A system that works but nobody
-            can use is an unfinished system. So I keep learning — architecture, design, research
-            methodology — and keep shipping small, honest projects that teach me something new.
-          </p>
+          {paragraphs.map((p) => (
+            <p key={p.slice(0, 32)}>{p}</p>
+          ))}
           <ul className="flex flex-wrap gap-2 pt-2">
-            {traits.map((t) => (
+            {profile.research_interests.map((t) => (
               <li
                 key={t}
                 className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-foreground/80"
@@ -49,6 +27,9 @@ export function About() {
               </li>
             ))}
           </ul>
+          <blockquote className="border-l-2 border-primary/50 pl-4 text-sm italic text-foreground/85">
+            {profile.philosophy}
+          </blockquote>
         </Reveal>
 
         <Reveal delay={120}>
@@ -57,16 +38,23 @@ export function About() {
               Currently
             </p>
             <dl className="mt-5 space-y-5">
-              {currently.map((c) => (
-                <div key={c.label} className="border-b border-border pb-5 last:border-0 last:pb-0">
+              {currentStatus.map((c) => (
+                <div key={c.id} className="border-b border-border pb-5 last:border-0 last:pb-0">
                   <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                    {c.label}
+                    {c.emoji}
                   </dt>
                   <dd className="mt-1.5 font-display text-base font-medium text-foreground">
-                    {c.value}
+                    {c.label}
                   </dd>
                 </div>
               ))}
+              <div className="border-t border-border pt-5">
+                <dt className="text-xs uppercase tracking-wider text-muted-foreground">College</dt>
+                <dd className="mt-1.5 font-display text-base font-medium text-foreground">
+                  {profile.college}
+                </dd>
+                <dd className="mt-1 text-sm text-muted-foreground">{profile.university}</dd>
+              </div>
             </dl>
           </div>
         </Reveal>

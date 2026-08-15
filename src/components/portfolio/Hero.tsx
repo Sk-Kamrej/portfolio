@@ -1,14 +1,33 @@
-import { ArrowRight, Github, Linkedin, Mail, Sparkles } from "lucide-react";
-import { profile } from "@/data/portfolio";
+import { ArrowRight, Download, Github, Linkedin, Mail, Sparkles } from "lucide-react";
+import type { CurrentStatus, Profile, SocialLink } from "@/lib/site-types";
 import { Reveal } from "./Section";
 
-const workspace = [
-  { label: "Currently Building", value: "SmartAttendify" },
-  { label: "Exploring", value: "AI / ML / Research" },
-  { label: "Learning", value: "Software Architecture" },
-];
+const iconMap: Record<string, typeof Github> = {
+  github: Github,
+  linkedin: Linkedin,
+  mail: Mail,
+  email: Mail,
+};
 
-export function Hero() {
+export function Hero({
+  profile,
+  currentStatus,
+  socials,
+  resumeUrl,
+}: {
+  profile: Profile;
+  currentStatus: CurrentStatus[];
+  socials: SocialLink[];
+  resumeUrl: string | null;
+}) {
+  const links = socials.length
+    ? socials.map((s) => ({ href: s.url, label: s.label, icon: iconMap[s.icon] ?? Github }))
+    : [
+        { href: profile.github_url, label: "GitHub", icon: Github },
+        { href: profile.linkedin_url, label: "LinkedIn", icon: Linkedin },
+        { href: `mailto:${profile.email}`, label: "Email", icon: Mail },
+      ];
+
   return (
     <section id="hero" className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       <div className="hero-glow pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
@@ -22,27 +41,31 @@ export function Hero() {
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground sm:text-xs">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              BCA Honours with Research • Developer • AI/ML Enthusiast
+              {profile.descriptor}
             </span>
           </Reveal>
 
           <Reveal delay={80}>
             <h1 className="mt-7 text-4xl font-semibold leading-[1.08] sm:text-5xl lg:text-6xl">
-              <span className="text-gradient">Building technology</span>
+              <span className="text-gradient">{profile.name}</span>
               <br />
-              that solves real problems.
+              {profile.headline}
             </h1>
           </Reveal>
 
-          <Reveal delay={140}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              I&apos;m a BCA Honours with Research student passionate about software development,
-              artificial intelligence, machine learning, and building practical products. I learn by
-              creating, experimenting, and turning ideas into working systems.
+          <Reveal delay={120}>
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.22em] text-primary">
+              {profile.tagline}
             </p>
           </Reveal>
 
-          <Reveal delay={200}>
+          <Reveal delay={160}>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              {profile.hero_intro}
+            </p>
+          </Reveal>
+
+          <Reveal delay={220}>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
                 href="#projects"
@@ -51,6 +74,16 @@ export function Hero() {
                 Explore My Work
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
+              {resumeUrl && (
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                >
+                  <Download className="h-4 w-4" /> Download Resume
+                </a>
+              )}
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-surface-strong"
@@ -60,13 +93,9 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={260}>
+          <Reveal delay={280}>
             <div className="mt-8 flex items-center gap-3">
-              {[
-                { href: profile.github, icon: Github, label: "GitHub" },
-                { href: profile.linkedin, icon: Linkedin, label: "LinkedIn" },
-                { href: `mailto:${profile.email}`, icon: Mail, label: "Email" },
-              ].map(({ href, icon: Icon, label }) => (
+              {links.map(({ href, icon: Icon, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -100,18 +129,27 @@ export function Hero() {
                 </span>
               </div>
 
+              {profile.photo_url && (
+                <img
+                  src={profile.photo_url}
+                  alt={`Portrait of ${profile.name}`}
+                  loading="lazy"
+                  className="mt-5 h-40 w-full rounded-xl border border-border object-cover"
+                />
+              )}
+
               <ul className="mt-5 space-y-3">
-                {workspace.map((w, i) => (
+                {currentStatus.map((w, i) => (
                   <li
-                    key={w.label}
+                    key={w.id}
                     style={{ animationDelay: `${i * 400}ms` }}
                     className="card-hover rounded-xl border border-border bg-surface p-4"
                   >
                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-                      {w.label}
+                      {w.emoji}
                     </p>
-                    <p className="mt-1.5 font-display text-lg font-semibold text-foreground">
-                      {w.value}
+                    <p className="mt-1.5 font-display text-base font-semibold text-foreground">
+                      {w.label}
                     </p>
                   </li>
                 ))}
