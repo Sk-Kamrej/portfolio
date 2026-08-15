@@ -109,8 +109,8 @@ export async function fetchGithub(username: string): Promise<GithubStats> {
       ),
     ]);
     if (!userRes.ok) return null;
-    const user = (await userRes.json()) as Record<string, never>;
-    const repos = repoRes.ok ? ((await repoRes.json()) as Record<string, never>[]) : [];
+    const user = (await userRes.json()) as Record<string, unknown>;
+    const repos = repoRes.ok ? ((await repoRes.json()) as Record<string, unknown>[]) : [];
     return {
       username,
       avatarUrl: (user["avatar_url"] as string | null) ?? null,
