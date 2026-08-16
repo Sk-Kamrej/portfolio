@@ -1,7 +1,23 @@
-import { Github, Linkedin, Mail } from "lucide-react";
-import { profile } from "@/data/portfolio";
+import { Github, Linkedin, Lock, Mail } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import type { Profile, SocialLink } from "@/lib/site-types";
 
-export function Footer() {
+const iconMap: Record<string, typeof Github> = {
+  github: Github,
+  linkedin: Linkedin,
+  mail: Mail,
+  email: Mail,
+};
+
+export function Footer({ profile, socials }: { profile: Profile; socials: SocialLink[] }) {
+  const links = socials.length
+    ? socials.map((s) => ({ href: s.url, label: s.label, icon: iconMap[s.icon] ?? Github }))
+    : [
+        { href: profile.github_url, label: "GitHub", icon: Github },
+        { href: profile.linkedin_url, label: "LinkedIn", icon: Linkedin },
+        { href: `mailto:${profile.email}`, label: "Email", icon: Mail },
+      ];
+
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 sm:px-8 md:flex-row md:items-center md:justify-between">
@@ -9,15 +25,11 @@ export function Footer() {
           <p className="font-display text-sm font-bold uppercase tracking-[0.28em]">
             {profile.name}
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">Building. Learning. Researching.</p>
+          <p className="mt-2 text-sm text-muted-foreground">{profile.philosophy}</p>
         </div>
 
         <div className="flex items-center gap-3">
-          {[
-            { href: profile.github, icon: Github, label: "GitHub" },
-            { href: profile.linkedin, icon: Linkedin, label: "LinkedIn" },
-            { href: `mailto:${profile.email}`, icon: Mail, label: "Email" },
-          ].map(({ href, icon: Icon, label }) => (
+          {links.map(({ href, icon: Icon, label }) => (
             <a
               key={label}
               href={href}
@@ -32,9 +44,17 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border">
-        <p className="mx-auto w-full max-w-6xl px-5 py-5 text-xs text-muted-foreground sm:px-8">
-          © 2026 {profile.name}. All rights reserved.
-        </p>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {profile.name}. All rights reserved.
+          </p>
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/70 transition-colors hover:text-primary"
+          >
+            <Lock className="h-3 w-3" /> Admin
+          </Link>
+        </div>
       </div>
     </footer>
   );
