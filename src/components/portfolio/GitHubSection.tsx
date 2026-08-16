@@ -1,9 +1,47 @@
-import { Github } from "lucide-react";
-import { profile } from "@/data/portfolio";
+import { useEffect, useState } from "react";
+import { Github, Star } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { getGithubStats } from "@/lib/portfolio.functions";
+import type { GithubStats } from "@/lib/site-types";
 import { Section, Reveal } from "./Section";
 
-export function GitHubSection() {
-  const cells = Array.from({ length: 7 * 26 });
+export function GitHubSection({
+  username,
+  profileUrl,
+}: {
+  username: string;
+  profileUrl: string;
+}) {
+  const fetchStats = useServerFn(getGithubStats);
+  const [stats, setStats] = useState<GithubStats>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    if (!username) {
+      setLoading(false);
+      return;
+    }
+    fetchStats({ data: { username } })
+      .then((s) => {
+        if (alive) setStats(s);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [username]);
+
+  const metrics = stats
+    ? [
+        { label: "Public repos", value: stats.publicRepos },
+        { label: "Followers", value: stats.followers },
+        { label: "Following", value: stats.following },
+      ]
+    : [];
 
   return (
     <Section id="github" eyebrow="Activity" title="Code is where ideas become experiments.">
@@ -11,11 +49,14 @@ export function GitHubSection() {
         <div className="glass rounded-2xl p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              Contribution activity will be pulled from the GitHub API here. No numbers are shown
-              until it&apos;s connected.
+              {loading
+                ? "Loading live GitHub activity…"
+                : stats
+                  ? `Live from GitHub · @${stats.username}`
+                  : "GitHub activity is temporarily unavailable."}
             </p>
             <a
-              href={profile.github}
+              href={profileUrl}
               target="_blank"
               rel="noreferrer noopener"
               className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:border-primary/40 hover:text-primary"
@@ -24,23 +65,50 @@ export function GitHubSection() {
             </a>
           </div>
 
-          <div
-            className="mt-6 overflow-hidden"
-            role="img"
-            aria-label="Placeholder contribution grid, awaiting GitHub integration"
-          >
-            <div className="grid grid-flow-col grid-rows-7 gap-1">
-              {cells.map((_, i) => (
-                <span
-                  key={i}
-                  className="h-2.5 w-2.5 rounded-[3px] border border-border bg-surface-strong"
-                />
+          {metrics.length > 0 && (
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {metrics.map((m) => (
+                <div key={m.label} className="rounded-xl border border-border bg-surface p-4">
+                  <p className="font-display text-2xl font-semibold text-foreground">{m.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                    {m.label}
+                  </p>
+                </div>
               ))}
             </div>
-          </div>
-          <p className="mt-4 font-mono text-[11px] text-muted-foreground/70">
-            // placeholder grid — ready for GitHub API integration
-          </p>
+          )}
+
+          {stats && stats.repos.length > 0 && (
+            <ul className="mt-4 grid gap-3 md:grid-cols-2">
+              {stats.repos.map((r) => (
+                <li key={r.name}>
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="card-hover block h-full rounded-xl border border-border bg-surface p-4"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-medium text-foreground">{r.name}</span>
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Star className="h-3 w-3" /> {r.stars}
+                      </span>
+                    </div>
+                    {r.description && (
+                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                        {r.description}
+                      </p>
+                    )}
+                    {r.language && (
+                      <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-primary">
+                        {r.language}
+                      </p>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </Reveal>
     </Section>
