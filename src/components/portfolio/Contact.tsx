@@ -1,43 +1,64 @@
 import { useState } from "react";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Send } from "lucide-react";
 import { toast } from "sonner";
-import { profile } from "@/data/portfolio";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import type { Profile, SocialLink } from "@/lib/site-types";
 import { Section, Reveal } from "./Section";
 import { cn } from "@/lib/utils";
 
-type Errors = Partial<Record<"name" | "email" | "subject" | "message", string>>;
+const schema = z.object({
+  name: z.string().trim().min(2, "Please enter your name.").max(100),
+  email: z.string().trim().email("Enter a valid email address.").max(255),
+  subject: z.string().trim().min(3, "Add a short subject.").max(150),
+  message: z.string().trim().min(10, "Message should be at least 10 characters.").max(2000),
+});
 
-export function Contact() {
-  const [values, setValues] = useState({ name: "", email: "", subject: "", message: "" });
+type Values = z.infer<typeof schema>;
+type Errors = Partial<Record<keyof Values, string>>;
+
+const iconMap: Record<string, typeof Github> = {
+  github: Github,
+  linkedin: Linkedin,
+  mail: Mail,
+  email: Mail,
+};
+
+export function Contact({ profile, socials }: { profile: Profile; socials: SocialLink[] }) {
+  const [values, setValues] = useState<Values>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
   const [errors, setErrors] = useState<Errors>({});
+  const [sending, setSending] = useState(false);
 
-  const validate = () => {
-    const e: Errors = {};
-    if (values.name.trim().length < 2) e.name = "Please enter your name.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) e.email = "Enter a valid email address.";
-    if (values.subject.trim().length < 3) e.subject = "Add a short subject.";
-    if (values.message.trim().length < 10) e.message = "Message should be at least 10 characters.";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const onSubmit = (ev: React.FormEvent) => {
+  const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (!validate()) return;
-    const body = encodeURIComponent(`${values.message}\n\n— ${values.name} (${values.email})`);
-    const subject = encodeURIComponent(values.subject);
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    toast("Opening your email client", {
-      description: "No email backend is connected yet, so this form composes a message for you.",
-    });
+    const parsed = schema.safeParse(values);
+    if (!parsed.success) {
+      const e: Errors = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as keyof Values;
+        e[key] ??= issue.message;
+      }
+      setErrors(e);
+      return;
+    }
+    setErrors({});
+    setSending(true);
+    const { error } = await supabase.from("contact_messages").insert(parsed.data);
+    setSending(false);
+    if (error) {
+      toast.error("Message could not be sent", { description: "Please try again in a moment." });
+      return;
+    }
+    setValues({ name: "", email: "", subject: "", message: "" });
+    toast.success("Message sent", { description: "Thanks for reaching out — I'll reply soon." });
   };
 
-  const field = (
-    key: keyof typeof values,
-    label: string,
-    type = "text",
-    textarea = false,
-  ) => (
+  const field = (key: keyof Values, label: string, type = "text", textarea = false) => (
     <div className={cn(textarea && "sm:col-span-2")}>
       <label htmlFor={key} className="text-xs uppercase tracking-wider text-muted-foreground">
         {label}
@@ -48,9 +69,8 @@ export function Contact() {
           rows={5}
           value={values[key]}
           aria-invalid={!!errors[key]}
-          aria-describedby={errors[key] ? `${key}-error` : undefined}
           onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
-          className="mt-2 w-full resize-y rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/50"
+          className="mt-2 w-full resize-y rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary/50"
         />
       ) : (
         <input
@@ -58,18 +78,21 @@ export function Contact() {
           type={type}
           value={values[key]}
           aria-invalid={!!errors[key]}
-          aria-describedby={errors[key] ? `${key}-error` : undefined}
           onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
-          className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/50"
+          className="mt-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary/50"
         />
       )}
-      {errors[key] && (
-        <p id={`${key}-error`} className="mt-1.5 text-xs text-destructive">
-          {errors[key]}
-        </p>
-      )}
+      {errors[key] && <p className="mt-1.5 text-xs text-destructive">{errors[key]}</p>}
     </div>
   );
+
+  const links = socials.length
+    ? socials.map((s) => ({ href: s.url, label: s.label, icon: iconMap[s.icon] ?? Github }))
+    : [
+        { href: profile.github_url, label: "GitHub", icon: Github },
+        { href: profile.linkedin_url, label: "LinkedIn", icon: Linkedin },
+        { href: `mailto:${profile.email}`, label: "Email", icon: Mail },
+      ];
 
   return (
     <Section
@@ -80,52 +103,50 @@ export function Contact() {
     >
       <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
         <Reveal>
-          <div className="glass flex h-full flex-col justify-between rounded-2xl p-6">
-            <ul className="space-y-3">
-              {[
-                { icon: Mail, label: "Email", value: profile.email, href: `mailto:${profile.email}` },
-                { icon: Linkedin, label: "LinkedIn", value: "Connect on LinkedIn", href: profile.linkedin },
-                { icon: Github, label: "GitHub", value: "See my code", href: profile.github },
-              ].map(({ icon: Icon, label, value, href }) => (
+          <div className="glass h-full rounded-2xl p-6">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+              Direct
+            </p>
+            <a
+              href={`mailto:${profile.email}`}
+              className="mt-4 block break-all font-display text-lg font-medium text-foreground hover:text-primary"
+            >
+              {profile.email}
+            </a>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {profile.college} · {profile.university}
+            </p>
+            <ul className="mt-6 space-y-3">
+              {links.map(({ href, icon: Icon, label }) => (
                 <li key={label}>
                   <a
                     href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel="noreferrer noopener"
-                    className="card-hover flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3"
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
                   >
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/25 bg-primary/10 text-primary">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <span>
-                      <span className="block text-xs uppercase tracking-wider text-muted-foreground">
-                        {label}
-                      </span>
-                      <span className="block text-sm text-foreground">{value}</span>
-                    </span>
+                    <Icon className="h-4 w-4" /> {label}
                   </a>
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-xs leading-relaxed text-muted-foreground/80">
-              Note: the form below isn&apos;t connected to an email backend yet — it opens your mail
-              client with the message pre-filled.
-            </p>
           </div>
         </Reveal>
 
         <Reveal delay={100}>
-          <form onSubmit={onSubmit} noValidate className="glass grid gap-5 rounded-2xl p-6 sm:grid-cols-2">
+          <form onSubmit={onSubmit} className="glass grid gap-5 rounded-2xl p-6 sm:grid-cols-2">
             {field("name", "Name")}
             {field("email", "Email", "email")}
-            <div className="sm:col-span-2">{field("subject", "Subject")}</div>
+            {field("subject", "Subject")}
             {field("message", "Message", "text", true)}
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110 sm:w-auto"
+                disabled={sending}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:opacity-60"
               >
-                Send Message
+                <Send className="h-4 w-4" />
+                {sending ? "Sending…" : "Send Message"}
               </button>
             </div>
           </form>
