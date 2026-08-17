@@ -32,30 +32,65 @@ export function About({
           </blockquote>
         </Reveal>
 
-        <Reveal delay={120}>
-          <div className="glass card-hover rounded-2xl p-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-              Currently
-            </p>
-            <dl className="mt-5 space-y-5">
-              {currentStatus.map((c) => (
-                <div key={c.id} className="border-b border-border pb-5 last:border-0 last:pb-0">
-                  <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                    {c.emoji}
-                  </dt>
-                  <dd className="mt-1.5 font-display text-base font-medium text-foreground">
-                    {c.label}
-                  </dd>
+        <Reveal delay={160}>
+          <div className="relative">
+            <div
+              className="absolute -inset-6 -z-10 rounded-[2rem] bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-60 blur-2xl"
+              aria-hidden="true"
+            />
+            <div className="animate-float glass rounded-2xl p-5 shadow-[var(--shadow-elevated)] sm:p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex gap-1.5" aria-hidden="true">
+                  <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-primary/50" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-accent/60" />
                 </div>
-              ))}
-              <div className="border-t border-border pt-5">
-                <dt className="text-xs uppercase tracking-wider text-muted-foreground">College</dt>
-                <dd className="mt-1.5 font-display text-base font-medium text-foreground">
-                  {profile.college}
-                </dd>
-                <dd className="mt-1 text-sm text-muted-foreground">{profile.university}</dd>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  workspace
+                </span>
               </div>
-            </dl>
+
+              {profile.photo_url && (
+                <img
+                  src={profile.photo_url}
+                  alt={`Portrait of ${profile.name}`}
+                  loading="lazy"
+                  className="mt-5 h-40 w-full rounded-xl border border-border object-cover"
+                />
+              )}
+
+              <ul className="mt-5 space-y-3">
+                {currentStatus.map((w, i) => (
+                  <li
+                    key={w.id}
+                    style={{ animationDelay: `${i * 400}ms` }}
+                    className="card-hover rounded-xl border border-border bg-surface p-4"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                      {w.emoji}
+                    </p>
+                    <p className="mt-1.5 font-display text-base font-semibold text-foreground">
+                      {w.label}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3">
+                <span
+                  className="animate-pulse-ring h-2 w-2 rounded-full bg-emerald-400"
+                  aria-hidden="true"
+                />
+                <span className="text-sm text-muted-foreground">Open to opportunities</span>
+              </div>
+
+              <p className="mt-4 font-mono text-[11px] leading-relaxed text-muted-foreground/70">
+                <span className="text-primary">const</span> focus = [
+                <span className="text-accent">&quot;build&quot;</span>,{" "}
+                <span className="text-accent">&quot;research&quot;</span>,{" "}
+                <span className="text-accent">&quot;iterate&quot;</span>];
+              </p>
+            </div>
           </div>
         </Reveal>
       </div>

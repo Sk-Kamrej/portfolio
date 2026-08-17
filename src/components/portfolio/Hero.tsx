@@ -11,7 +11,7 @@ const iconMap: Record<string, typeof Github> = {
 
 export function Hero({
   profile,
-  currentStatus,
+  currentStatus: _currentStatus,
   socials,
   resumeUrl,
 }: {
@@ -21,7 +21,11 @@ export function Hero({
   resumeUrl: string | null;
 }) {
   const links = socials.length
-    ? socials.map((s) => ({ href: s.url, label: s.label, icon: iconMap[s.icon] ?? Github }))
+    ? socials.map((s) => ({
+        href: s.url,
+        label: s.label,
+        icon: iconMap[s.icon] ?? Github,
+      }))
     : [
         { href: profile.github_url, label: "GitHub", icon: Github },
         { href: profile.linkedin_url, label: "LinkedIn", icon: Linkedin },
@@ -30,13 +34,16 @@ export function Hero({
 
   return (
     <section id="hero" className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
+      {/* Background glow */}
       <div className="hero-glow pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+
       <div
         className="grid-bg animate-drift pointer-events-none absolute inset-0 -z-10 opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent)]"
         aria-hidden="true"
       />
 
       <div className="mx-auto grid w-full max-w-6xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        {/* ================= LEFT SIDE ================= */}
         <div>
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground sm:text-xs">
@@ -46,10 +53,14 @@ export function Hero({
           </Reveal>
 
           <Reveal delay={80}>
-            <h1 className="mt-7 text-4xl font-semibold leading-[1.08] sm:text-5xl lg:text-6xl">
-              <span className="text-gradient">{profile.name}</span>
-              <br />
-              {profile.headline}
+            <h1 className="mt-7 font-semibold leading-tight">
+              <span className="block text-4xl sm:text-5xl lg:text-6xl text-gradient">
+                {profile.name}
+              </span>
+
+              <span className="mt-3 block text-2xl sm:text-3xl lg:text-4xl text-foreground">
+                {profile.headline}
+              </span>
             </h1>
           </Reveal>
 
@@ -60,11 +71,12 @@ export function Hero({
           </Reveal>
 
           <Reveal delay={160}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground text-justify [text-align-last:left]">
               {profile.hero_intro}
             </p>
           </Reveal>
 
+          {/* Buttons */}
           <Reveal delay={220}>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
@@ -74,6 +86,7 @@ export function Hero({
                 Explore My Work
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
+
               {resumeUrl && (
                 <a
                   href={resumeUrl}
@@ -81,9 +94,11 @@ export function Hero({
                   rel="noreferrer noopener"
                   className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
                 >
-                  <Download className="h-4 w-4" /> Download Resume
+                  <Download className="h-4 w-4" />
+                  Download Resume
                 </a>
               )}
+
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-surface-strong"
@@ -93,6 +108,7 @@ export function Hero({
             </div>
           </Reveal>
 
+          {/* Social links */}
           <Reveal delay={280}>
             <div className="mt-8 flex items-center gap-3">
               {links.map(({ href, icon: Icon, label }) => (
@@ -111,64 +127,47 @@ export function Hero({
           </Reveal>
         </div>
 
+        {/* ================= RIGHT SIDE ================= */}
         <Reveal delay={160}>
-          <div className="relative">
+          <div className="relative flex justify-center lg:justify-end lg:-translate-y-3 lg:-translate-x-20">
+            {/* Glow behind photo */}
             <div
-              className="absolute -inset-6 -z-10 rounded-[2rem] bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-60 blur-2xl"
+              className="absolute -inset-4 -z-10 rounded-[2rem] bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-40 blur-2xl"
               aria-hidden="true"
             />
-            <div className="animate-float glass rounded-2xl p-5 shadow-[var(--shadow-elevated)] sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex gap-1.5" aria-hidden="true">
-                  <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-primary/50" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+
+            {/* Outer frame */}
+            <div className="glass w-full max-w-[330px] rounded-2xl p-4 shadow-[var(--shadow-elevated)] sm:p-5">
+              {/* Photo + name */}
+              <div className="relative overflow-hidden rounded-xl border border-border">
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img
+                    src="/profile.jpg"
+                    alt="SK Kamrej"
+                    className="h-full w-full object-cover object-center"
+                  />
+
+                  {/* Bottom gradient */}
+                  <div
+                    className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0B1120] to-transparent"
+                    aria-hidden="true"
+                  />
+
+                  {/* Name */}
+                  <div className="absolute bottom-4 left-4">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+                      SK KAMREJ
+                    </p>
+                  </div>
                 </div>
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  workspace
-                </span>
               </div>
 
-              {profile.photo_url && (
-                <img
-                  src={profile.photo_url}
-                  alt={`Portrait of ${profile.name}`}
-                  loading="lazy"
-                  className="mt-5 h-40 w-full rounded-xl border border-border object-cover"
-                />
-              )}
+              {/* Open to opportunities */}
+              <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
 
-              <ul className="mt-5 space-y-3">
-                {currentStatus.map((w, i) => (
-                  <li
-                    key={w.id}
-                    style={{ animationDelay: `${i * 400}ms` }}
-                    className="card-hover rounded-xl border border-border bg-surface p-4"
-                  >
-                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-                      {w.emoji}
-                    </p>
-                    <p className="mt-1.5 font-display text-base font-semibold text-foreground">
-                      {w.label}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3">
-                <span
-                  className="animate-pulse-ring h-2 w-2 rounded-full bg-emerald-400"
-                  aria-hidden="true"
-                />
                 <span className="text-sm text-muted-foreground">Open to opportunities</span>
               </div>
-
-              <p className="mt-4 font-mono text-[11px] leading-relaxed text-muted-foreground/70">
-                <span className="text-primary">const</span> focus = [
-                <span className="text-accent">&quot;build&quot;</span>,{" "}
-                <span className="text-accent">&quot;research&quot;</span>,{" "}
-                <span className="text-accent">&quot;iterate&quot;</span>];
-              </p>
             </div>
           </div>
         </Reveal>
