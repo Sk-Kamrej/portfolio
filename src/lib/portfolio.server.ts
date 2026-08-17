@@ -2,6 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import type { GithubStats, SiteData } from "@/lib/site-types";
 
+const LINKEDIN_URL = "https://www.linkedin.com/in/sk-kamrej-740031313/";
+
 function publicClient() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
   const url = process.env["SUPABASE_URL"]!;
@@ -72,8 +74,24 @@ export async function fetchSiteData(): Promise<SiteData> {
 
   const resumeUrl: string | null = null;
 
+  const profileData = profile.data
+    ? {
+        ...profile.data,
+        linkedin_url: LINKEDIN_URL,
+      }
+    : null;
+
+  const socialsData = ((socials.data ?? []) as SiteData["socials"]).map((social) =>
+    social.label.toLowerCase() === "linkedin"
+      ? {
+          ...social,
+          url: LINKEDIN_URL,
+        }
+      : social,
+  );
+
   return {
-    profile: profile.data ?? null,
+    profile: profileData,
     academicProfile: academicProfile.data ?? null,
     academicRecords: (academicRecords.data ?? []) as SiteData["academicRecords"],
     education: (education.data ?? []) as SiteData["education"],
@@ -86,7 +104,7 @@ export async function fetchSiteData(): Promise<SiteData> {
     certifications: (certifications.data ?? []) as SiteData["certifications"],
     achievements: (achievements.data ?? []) as SiteData["achievements"],
     posts: (posts.data ?? []) as SiteData["posts"],
-    socials: (socials.data ?? []) as SiteData["socials"],
+    socials: socialsData as SiteData["socials"],
     settings: settingsMap,
     resumeUrl,
   };
