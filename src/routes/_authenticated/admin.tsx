@@ -29,29 +29,6 @@ type Tab = {
 
 const tabs: Tab[] = [
   {
-    id: "profile",
-    label: "Profile",
-    table: "profile",
-    labelKey: "name",
-    fields: [
-      { key: "name", label: "Name" },
-      { key: "headline", label: "Headline" },
-      { key: "descriptor", label: "Descriptor" },
-      { key: "tagline", label: "Tagline" },
-      { key: "philosophy", label: "Philosophy", type: "textarea" },
-      { key: "bio", label: "Bio", type: "textarea" },
-      { key: "hero_intro", label: "Hero Introduction", type: "textarea" },
-      { key: "email", label: "Email" },
-      { key: "github_url", label: "GitHub URL" },
-      { key: "github_username", label: "GitHub Username" },
-      { key: "linkedin_url", label: "LinkedIn URL" },
-      { key: "college", label: "College" },
-      { key: "university", label: "University" },
-      { key: "research_interests", label: "Research Interests", type: "array" },
-    ],
-  },
-
-  {
     id: "projects",
     label: "Projects",
     table: "projects",
