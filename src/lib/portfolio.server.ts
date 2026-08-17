@@ -77,7 +77,8 @@ export async function fetchSiteData(): Promise<SiteData> {
   const profileData = profile.data
     ? {
         ...profile.data,
-        bio: "I'm a 4th Year BCA Honours with Research student interested in software development, artificial intelligence, machine learning, and research. I learn by building practical projects, experimenting with technology, and exploring real-world problems.",
+        hero_intro:
+          "I'm a 4th Year BCA Honours with Research student interested in software development, artificial intelligence, machine learning, and research. I learn by building practical projects, experimenting with technology, and exploring real-world problems.",
         linkedin_url: LINKEDIN_URL,
       }
     : null;
