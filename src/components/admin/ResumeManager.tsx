@@ -52,7 +52,7 @@ export function ResumeManager() {
       if (upErr) throw new Error(upErr.message);
 
       const version = rows.reduce((max, r) => Math.max(max, r.version ?? 0), 0) + 1;
-      await supabase.from("resumes").update({ is_active: false }).neq("id", "");
+      await supabase.from("resumes").update({ is_active: false }).eq("is_active", true);
       const { error: insErr } = await supabase.from("resumes").insert({
         file_path: path,
         file_url: path,
@@ -85,7 +85,7 @@ export function ResumeManager() {
 
   const activate = async (row: ResumeRow) => {
     setBusy(true);
-    await supabase.from("resumes").update({ is_active: false }).neq("id", row.id);
+    await supabase.from("resumes").update({ is_active: false }).eq("is_active", true);
     const { error } = await supabase.from("resumes").update({ is_active: true }).eq("id", row.id);
     if (error) toast.error(error.message);
     else toast.success("Active resume updated.");
