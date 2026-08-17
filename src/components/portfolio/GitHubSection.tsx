@@ -12,17 +12,19 @@ export function GitHubSection({
   username: string;
   profileUrl: string;
 }) {
+  const resolved =
+    username || profileUrl?.match(/github\.com\/([^/?#]+)/)?.[1] || "";
   const fetchStats = useServerFn(getGithubStats);
   const [stats, setStats] = useState<GithubStats>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
-    if (!username) {
+    if (!resolved) {
       setLoading(false);
       return;
     }
-    fetchStats({ data: { username } })
+    fetchStats({ data: { username: resolved } })
       .then((s) => {
         if (alive) setStats(s);
       })
@@ -33,7 +35,7 @@ export function GitHubSection({
     return () => {
       alive = false;
     };
-  }, [username]);
+  }, [resolved]);
 
   const metrics = stats
     ? [
@@ -108,6 +110,41 @@ export function GitHubSection({
                 </li>
               ))}
             </ul>
+          )}
+
+          {stats && stats.events.length > 0 && (
+            <div className="mt-8">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+                Recent activity
+              </h3>
+              <ol className="mt-4 space-y-3 border-l border-border pl-5">
+                {stats.events.map((e) => (
+                  <li key={e.id} className="relative">
+                    <span
+                      className="absolute -left-[1.6rem] top-2 h-2 w-2 rounded-full bg-primary/70"
+                      aria-hidden="true"
+                    />
+                    <p className="text-sm text-foreground">
+                      {e.summary}{" "}
+                      <a
+                        href={e.repoUrl}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="text-primary hover:underline"
+                      >
+                        {e.repo}
+                      </a>
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {new Date(e.createdAt).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </div>
           )}
         </div>
       </Reveal>

@@ -101,16 +101,51 @@ export async function fetchGithub(username: string): Promise<GithubStats> {
   if (!username) return null;
   const headers = { Accept: "application/vnd.github+json", "User-Agent": "portfolio" };
   try {
-    const [userRes, repoRes] = await Promise.all([
+    const [userRes, repoRes, eventRes] = await Promise.all([
       fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, { headers }),
       fetch(
         `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=6`,
+        { headers },
+      ),
+      fetch(
+        `https://api.github.com/users/${encodeURIComponent(username)}/events/public?per_page=30`,
         { headers },
       ),
     ]);
     if (!userRes.ok) return null;
     const user = (await userRes.json()) as Record<string, unknown>;
     const repos = repoRes.ok ? ((await repoRes.json()) as Record<string, unknown>[]) : [];
+    const rawEvents = eventRes.ok ? ((await eventRes.json()) as Record<string, unknown>[]) : [];
+    const events = rawEvents.slice(0, 10).map((e) => {
+      const repoName = String((e["repo"] as Record<string, unknown> | undefined)?.["name"] ?? "");
+      const payload = (e["payload"] ?? {}) as Record<string, unknown>;
+      const type = String(e["type"] ?? "Event");
+      let summary = type.replace(/Event$/, "");
+      if (type === "PushEvent") {
+        const commits = (payload["commits"] as unknown[] | undefined)?.length ?? 0;
+        summary = `Pushed ${commits} commit${commits === 1 ? "" : "s"} to ${String(payload["ref"] ?? "").replace("refs/heads/", "")}`;
+      } else if (type === "CreateEvent") {
+        summary = `Created ${String(payload["ref_type"] ?? "repository")}`;
+      } else if (type === "WatchEvent") {
+        summary = "Starred repository";
+      } else if (type === "ForkEvent") {
+        summary = "Forked repository";
+      } else if (type === "IssuesEvent" || type === "PullRequestEvent") {
+        summary = `${String(payload["action"] ?? "updated")} ${type === "IssuesEvent" ? "an issue" : "a pull request"}`;
+      } else if (type === "IssueCommentEvent") {
+        summary = "Commented on an issue";
+      } else if (type === "ReleaseEvent") {
+        summary = "Published a release";
+      }
+      return {
+        id: String(e["id"] ?? `${repoName}-${String(e["created_at"])}`),
+        type,
+        repo: repoName,
+        repoUrl: `https://github.com/${repoName}`,
+        summary,
+        createdAt: String(e["created_at"] ?? ""),
+      };
+    });
     return {
       username,
       avatarUrl: (user["avatar_url"] as string | null) ?? null,
@@ -128,6 +163,7 @@ export async function fetchGithub(username: string): Promise<GithubStats> {
         url: String(r["html_url"]),
         updatedAt: String(r["updated_at"]),
       })),
+      events,
     };
   } catch {
     return null;
