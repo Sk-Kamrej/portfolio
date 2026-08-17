@@ -335,7 +335,7 @@ INSERT INTO public.profile (name, headline, descriptor, tagline, philosophy, bio
  'Building. Learning. Researching. Growing.',
  'I learn best by building.',
  'I am currently pursuing BCA Honours with Research at Panskura Banamali College under Vidyasagar University. I am interested in software development, AI/ML, research, and solving real-world problems through technology. I prefer learning through practical work and building actual projects rather than only studying theory. I am exploring how technology, machine learning, and software systems can be used to solve meaningful problems.',
- 'I''m a BCA Honours with Research student interested in software development, artificial intelligence, machine learning, and research. I learn by building practical projects, experimenting with technology, and exploring real-world problems.',
+ 'I''m a 4th Year BCA Honours with Research student interested in software development, artificial intelligence, machine learning, and research. I learn by building practical projects, experimenting with technology, and exploring real-world problems.',
  'skkamrej786@gmail.com',
  'https://github.com/Sk-Kamrej',
  'Sk-Kamrej',
