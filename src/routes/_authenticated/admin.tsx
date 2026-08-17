@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { LogOut, ShieldAlert } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { CollectionEditor, type Field } from "@/components/admin/CollectionEditor";
+import { ResumeManager } from "@/components/admin/ResumeManager";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -215,6 +216,13 @@ const tabs: Tab[] = [
     ],
   },
   {
+    id: "resumes",
+    label: "Resume",
+    table: "resumes",
+    labelKey: "label",
+    fields: [],
+  },
+  {
     id: "contact_messages",
     label: "Messages",
     table: "contact_messages",
@@ -307,6 +315,9 @@ function AdminPage() {
         </nav>
 
         <section className="mt-8">
+          {tab.id === "resumes" ? (
+            <ResumeManager />
+          ) : (
           <CollectionEditor
             key={tab.id}
             table={tab.table}
@@ -315,6 +326,7 @@ function AdminPage() {
             orderBy={tab.orderBy ?? "sort_order"}
             labelKey={tab.labelKey ?? "title"}
           />
+          )}
         </section>
       </main>
     </div>

@@ -53,4 +53,12 @@ export type GithubStats = {
     url: string;
     updatedAt: string;
   }[];
+  events: {
+    id: string;
+    type: string;
+    repo: string;
+    repoUrl: string;
+    summary: string;
+    createdAt: string;
+  }[];
 } | null;
