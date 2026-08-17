@@ -29,6 +29,13 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "/favicon.png",
+      },
+    ],
   }),
   errorComponent: () => (
     <div className="flex min-h-screen items-center justify-center px-6 text-center">
