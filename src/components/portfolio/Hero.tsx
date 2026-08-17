@@ -142,7 +142,7 @@ export function Hero({
               <div className="relative overflow-hidden rounded-xl border border-border">
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <img
-                    src="/profile.jpg"
+                    src="/profile.jpeg"
                     alt="SK Kamrej"
                     className="h-full w-full object-cover object-center"
                   />
@@ -164,7 +164,10 @@ export function Hero({
 
               {/* Open to opportunities */}
               <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3">
-                <span className="h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+                <span
+                  className="animate-pulse-ring h-2 w-2 shrink-0 rounded-full bg-primary"
+                  aria-hidden="true"
+                />
 
                 <span className="text-sm text-muted-foreground">Open to opportunities</span>
               </div>

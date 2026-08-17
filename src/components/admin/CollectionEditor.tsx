@@ -203,10 +203,7 @@ export function CollectionEditor({
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {fields.map((f) => (
-                <div
-                  key={f.key}
-                  className={f.type === "textarea" ? "sm:col-span-2" : undefined}
-                >
+                <div key={f.key} className={f.type === "textarea" ? "sm:col-span-2" : undefined}>
                   <label
                     htmlFor={`${table}-${f.key}`}
                     className="text-xs uppercase tracking-wider text-muted-foreground"
@@ -219,9 +216,7 @@ export function CollectionEditor({
                       id={`${table}-${f.key}`}
                       type="checkbox"
                       checked={Boolean(form[f.key])}
-                      onChange={(e) =>
-                        setForm((v) => ({ ...v, [f.key]: e.target.checked }))
-                      }
+                      onChange={(e) => setForm((v) => ({ ...v, [f.key]: e.target.checked }))}
                       className="mt-3 block h-4 w-4 accent-[var(--primary)]"
                     />
                   ) : f.type === "textarea" ? (
