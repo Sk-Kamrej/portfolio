@@ -12,17 +12,19 @@ export function GitHubSection({
   username: string;
   profileUrl: string;
 }) {
+  const resolved =
+    username || profileUrl?.match(/github\.com\/([^/?#]+)/)?.[1] || "";
   const fetchStats = useServerFn(getGithubStats);
   const [stats, setStats] = useState<GithubStats>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
-    if (!username) {
+    if (!resolved) {
       setLoading(false);
       return;
     }
-    fetchStats({ data: { username } })
+    fetchStats({ data: { username: resolved } })
       .then((s) => {
         if (alive) setStats(s);
       })
@@ -33,7 +35,7 @@ export function GitHubSection({
     return () => {
       alive = false;
     };
-  }, [username]);
+  }, [resolved]);
 
   const metrics = stats
     ? [
