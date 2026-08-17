@@ -14,7 +14,7 @@ import { LearningLog } from "@/components/portfolio/LearningLog";
 import { Contact } from "@/components/portfolio/Contact";
 import { Footer } from "@/components/portfolio/Footer";
 
-const title = "SK KAMREJ | Developer • AI/ML • Research";
+const title = "SK KAMREJ | PORTFOLIO";
 const description =
   "Portfolio of SK KAMREJ — BCA Honours with Research student at Panskura Banamali College, software developer and AI/ML researcher.";
 
@@ -62,7 +62,7 @@ function Index() {
           socials={data.socials}
           resumeUrl={data.resumeUrl}
         />
-        <About profile={profile} currentStatus={data.currentStatus} />
+        <About profile={profile} />
         <Academics
           academicProfile={data.academicProfile}
           records={data.academicRecords}
