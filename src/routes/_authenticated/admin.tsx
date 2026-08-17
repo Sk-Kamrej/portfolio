@@ -29,12 +29,35 @@ type Tab = {
 
 const tabs: Tab[] = [
   {
+    id: "profile",
+    label: "Profile",
+    table: "profile",
+    labelKey: "name",
+    fields: [
+      { key: "name", label: "Name" },
+      { key: "headline", label: "Headline" },
+      { key: "descriptor", label: "Descriptor" },
+      { key: "tagline", label: "Tagline" },
+      { key: "philosophy", label: "Philosophy", type: "textarea" },
+      { key: "bio", label: "Bio", type: "textarea" },
+      { key: "hero_intro", label: "Hero Introduction", type: "textarea" },
+      { key: "email", label: "Email" },
+      { key: "github_url", label: "GitHub URL" },
+      { key: "github_username", label: "GitHub Username" },
+      { key: "linkedin_url", label: "LinkedIn URL" },
+      { key: "college", label: "College" },
+      { key: "university", label: "University" },
+      { key: "research_interests", label: "Research Interests", type: "array" },
+    ],
+  },
+
+  {
     id: "projects",
     label: "Projects",
     table: "projects",
     labelKey: "title",
     fields: [
-      { key: "title", label: "Title" },
+      { key: "name", label: "Project name" },
       { key: "slug", label: "Slug" },
       { key: "status", label: "Status" },
       { key: "category", label: "Category" },
@@ -46,7 +69,7 @@ const tabs: Tab[] = [
       { key: "challenges", label: "Challenges", type: "textarea" },
       { key: "technologies", label: "Technologies", type: "array" },
       { key: "features", label: "Features", type: "array" },
-      { key: "learnings", label: "Learnings", type: "array" },
+      { key: "learned", label: "Learnings", type: "array" },
       { key: "github_url", label: "GitHub URL" },
       { key: "live_url", label: "Live URL" },
       { key: "sort_order", label: "Sort order", type: "number" },
@@ -318,14 +341,14 @@ function AdminPage() {
           {tab.id === "resumes" ? (
             <ResumeManager />
           ) : (
-          <CollectionEditor
-            key={tab.id}
-            table={tab.table}
-            title={tab.label}
-            fields={tab.fields}
-            orderBy={tab.orderBy ?? "sort_order"}
-            labelKey={tab.labelKey ?? "title"}
-          />
+            <CollectionEditor
+              key={tab.id}
+              table={tab.table}
+              title={tab.label}
+              fields={tab.fields}
+              orderBy={tab.orderBy ?? "sort_order"}
+              labelKey={tab.labelKey ?? "title"}
+            />
           )}
         </section>
       </main>
