@@ -8,7 +8,6 @@ import { Skills } from "@/components/portfolio/Skills";
 import { Projects } from "@/components/portfolio/Projects";
 import { Research } from "@/components/portfolio/Research";
 import { Timeline } from "@/components/portfolio/Timeline";
-import { GitHubSection } from "@/components/portfolio/GitHubSection";
 import { Certifications } from "@/components/portfolio/Certifications";
 import { Experience } from "@/components/portfolio/Experience";
 import { LearningLog } from "@/components/portfolio/LearningLog";
@@ -77,7 +76,6 @@ function Index() {
           philosophy={profile.philosophy}
         />
         <Timeline journey={data.journey} />
-        <GitHubSection username={profile.github_username} profileUrl={profile.github_url} />
         <Experience experience={data.experience} />
         <Certifications certifications={data.certifications} achievements={data.achievements} />
         <LearningLog posts={data.posts} />

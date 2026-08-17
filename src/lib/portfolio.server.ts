@@ -23,7 +23,11 @@ function publicClient() {
 export async function fetchSiteData(): Promise<SiteData> {
   const db = publicClient();
   const pub = <T extends string>(table: T) =>
-    db.from(table as never).select("*").eq("published", true).order("sort_order");
+    db
+      .from(table as never)
+      .select("*")
+      .eq("published", true)
+      .order("sort_order");
 
   const [
     profile,
@@ -66,10 +70,7 @@ export async function fetchSiteData(): Promise<SiteData> {
     if (row.value != null) settingsMap[row.key] = row.value;
   }
 
-  let resumeUrl: string | null = null;
-  if (resume.data?.file_path) {
-    resumeUrl = await signResume(resume.data.file_path);
-  }
+  const resumeUrl: string | null = null;
 
   return {
     profile: profile.data ?? null,
