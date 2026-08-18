@@ -1,124 +1,213 @@
 # SK KAMREJ — Personal Portfolio
 
-A modern, responsive personal portfolio website showcasing my academic journey, software development projects, research interests, achievements, experience, and learning journey.
+<div align="center">
 
-The portfolio is designed to document my growth as a BCA student, software developer, and aspiring researcher.
+### Modern • Responsive • Full-Stack Portfolio
+
+A personal portfolio website built to showcase my academic journey, technical skills, projects, research interests, experience, achievements, and learning journey.
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-Live-0ea5e9?style=for-the-badge)](#)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github)](https://github.com/Sk-Kamrej)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/sk-kamrej-740031313/)
+
+</div>
 
 ---
 
-## 🌐 About the Project
+## About
 
-This portfolio website brings together my:
+This is my personal portfolio and an ongoing record of my journey as a developer and researcher.
 
-- Academic background
-- Technical skills
-- Software development projects
-- Research interests
-- Internship and experience
-- Achievements and certifications
-- Learning journey
-- Writing and learning logs
-- Contact information
-- Resume
+I wanted to build something more than a static resume website. Instead of keeping my information hard-coded in individual pages, I built a portfolio that combines a modern frontend, dynamic content, an admin dashboard, database integration, GitHub data, a downloadable resume, and a working contact system.
 
-The website also includes an admin panel that allows portfolio content to be managed without directly modifying the frontend code.
+The portfolio is designed to grow with me as I learn, build projects, explore research, and gain experience.
+
+> **I learn best by building.**
 
 ---
 
 ## ✨ Features
 
-### 🏠 Personal Portfolio
-
-- Modern and responsive design
-- Mobile-friendly navigation
-- Smooth section navigation
-- Active navigation indicators
-- Animated section reveals
-- Clean glass-style UI
-- Responsive layout for desktop, tablet, and mobile
-
-### 📚 Academic Section
-
-Displays:
-
-- BCA academic information
-- Academic records
-- Education history
-- CGPA and academic details
-
-### 💻 Skills
-
-Showcases technical skills including:
-
-- C
-- C++
-- Java
-- Python
-- HTML
-- CSS
-- JavaScript
-- Database technologies
-- Development tools
-
-### 🚀 Projects
-
-Displays projects with information such as:
-
-- Project title
-- Description
-- Technologies used
-- Project links
-- Project status
-
-### 🔬 Research
-
-Contains:
-
+- Responsive design for desktop and mobile
+- Dynamic portfolio content
+- Admin dashboard
+- Academic profile
+- Technical skills
+- Projects showcase
 - Research interests
-- Research-oriented work
-- Research philosophy
-- Areas of exploration
+- Experience and journey
+- Achievements and certifications
+- Learning log / writing
+- Downloadable resume
+- GitHub integration
+- Contact form
+- Email notifications
+- Supabase database integration
 
-### 🧭 Journey
+---
 
-Documents my development journey, learning milestones, internships, and important experiences.
+## 🧠 How I Built It
 
-### 🏆 Achievements & Certifications
+I built the portfolio step by step rather than treating it as only a frontend project.
 
-Displays:
+### 1. Started with the Portfolio Design
 
+I first focused on the overall structure and user experience.
+
+The portfolio was divided into sections such as:
+
+- Hero
+- About
+- Academics
+- Skills
+- Projects
+- Research
+- Journey
 - Achievements
-- Certifications
-- Academic accomplishments
-- Professional milestones
+- Writing
+- Contact
 
-### ✍️ Writing
+The interface was designed to work across desktop and mobile screens.
 
-A learning-in-public section for:
+---
 
-- Technical notes
-- Experiments
-- Project updates
-- Development experiences
-- Things I learn while building
+### 2. Built Reusable React Components
 
-### 📩 Contact System
+Instead of putting everything into one large component, I separated the portfolio into reusable React components.
 
-The portfolio includes a functional contact form.
-
-When someone submits a message:
-
-1. The message is validated.
-2. The message is stored in the database.
-3. The message appears in the admin panel.
-4. An email notification is sent to me.
-5. The visitor receives a success notification.
-
-### 📄 Resume
-
-The portfolio includes a downloadable resume.
-
-The current resume is served from:
+For example:
 
 ```text
-public/SK_Kamrej_Resume.pdf
+Navbar
+Hero
+About
+Academics
+Skills
+Projects
+Research
+Journey
+Achievements
+Writing
+Contact
+Footer
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- TanStack Start
+- TanStack Router
+- Tailwind CSS
+- Lucide React
+- Zod
+- Sonner
+
+### Backend & Services
+
+- Supabase
+- PostgreSQL
+- Resend
+
+### APIs & Tools
+
+- GitHub REST API
+- Node.js
+- npm
+- Git
+- VS Code
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js
+- npm
+- Git
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Sk-Kamrej/portfolio.git
+cd portfolio
+```
+
+---
+
+## 🔐 Security
+
+Sensitive credentials are stored using environment variables.
+
+Never commit:
+
+```text
+.env
+.env.local
+```
+
+---
+
+## 🔄 Development
+
+This portfolio is continuously updated as I learn, build, experiment, and explore new technologies.
+
+My development process is simple:
+
+```text
+Learn
+  ↓
+Experiment
+  ↓
+Build
+  ↓
+Debug
+  ↓
+Test
+  ↓
+Improve
+  ↓
+Document
+```
+
+---
+
+## 📊 Status
+
+🟢 **Active Development**
+
+This portfolio is continuously evolving alongside my academic, development, and research journey.
+
+---
+
+## 👨‍💻 Author
+
+**SK KAMREJ**
+
+BCA — Honours with Research
+
+Interested in:
+
+- Software Development
+- Artificial Intelligence
+- Machine Learning
+- Research
+
+[GitHub](https://github.com/Sk-Kamrej) · [LinkedIn](https://www.linkedin.com/in/sk-kamrej-740031313/)
+
+---
+
+<div align="center">
+
+### Built by SK KAMREJ
+
+**Learning • Building • Experimenting • Growing**
+
+</div>
