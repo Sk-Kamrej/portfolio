@@ -6,7 +6,7 @@
 
 A personal portfolio website built to showcase my academic journey, technical skills, projects, research interests, experience, achievements, and learning journey.
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-Live-0ea5e9?style=for-the-badge)](https://skkamrej.vercel.com)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Live-0ea5e9?style=for-the-badge)](https://skkamrej.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github)](https://github.com/Sk-Kamrej)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/sk-kamrej-740031313/)
 
