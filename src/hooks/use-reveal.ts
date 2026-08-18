@@ -33,22 +33,54 @@ export function useActiveSection(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
 
   useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.2, 0.6] },
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
+    const updateActive = () => {
+      const scrollPosition = window.scrollY + 150;
+
+      // If we are at the bottom of the page,
+      // activate the last section.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 20;
+
+      if (atBottom) {
+        const lastId = ids[ids.length - 1];
+
+        if (lastId) {
+          setActive(lastId);
+        }
+
+        return;
+      }
+
+      let current = ids[0] ?? "";
+
+      for (const id of ids) {
+        const section = document.getElementById(id);
+
+        if (!section) continue;
+
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+        if (sectionTop <= scrollPosition) {
+          current = id;
+        }
+      }
+
+      setActive(current);
+    };
+
+    updateActive();
+
+    window.addEventListener("scroll", updateActive, {
+      passive: true,
     });
-    return () => io.disconnect();
-  }, [ids.join(",")]);
+
+    window.addEventListener("resize", updateActive);
+
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [ids]);
 
   return active;
 }

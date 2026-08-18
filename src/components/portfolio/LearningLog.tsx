@@ -6,7 +6,7 @@ export function LearningLog({ posts }: { posts: BlogPost[] }) {
 
   return (
     <Section
-      id="log"
+      id="writing"
       eyebrow="Writing"
       title="Learning in Public"
       intro="Notes, experiments and project updates."

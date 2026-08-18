@@ -72,7 +72,7 @@ export async function fetchSiteData(): Promise<SiteData> {
     if (row.value != null) settingsMap[row.key] = row.value;
   }
 
-  const resumeUrl: string | null = null;
+  const resumeUrl = "/SK_Kamrej_Resume.pdf";
 
   const profileData = profile.data
     ? {
@@ -113,9 +113,23 @@ export async function fetchSiteData(): Promise<SiteData> {
 }
 
 export async function signResume(path: string): Promise<string | null> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data } = await supabaseAdmin.storage.from("resumes").createSignedUrl(path, 60 * 60);
-  return data?.signedUrl ?? null;
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data, error } = await supabaseAdmin.storage
+      .from("resumes")
+      .createSignedUrl(path, 60 * 60);
+
+    if (error) {
+      console.error("Could not create resume URL:", error);
+      return null;
+    }
+
+    return data?.signedUrl ?? null;
+  } catch (error) {
+    console.error("Resume signing failed:", error);
+    return null;
+  }
 }
 
 export async function fetchGithub(username: string): Promise<GithubStats> {

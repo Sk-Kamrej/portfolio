@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useActiveSection } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,8 @@ const links = [
   { id: "projects", label: "Projects" },
   { id: "research", label: "Research" },
   { id: "journey", label: "Journey" },
+  { id: "achievements", label: "Achievements" },
+  { id: "writing", label: "Writing" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -48,7 +50,7 @@ export function Navbar({ name, resumeUrl }: { name: string; resumeUrl: string | 
           href="#hero"
           className="font-display text-sm font-bold uppercase tracking-[0.28em] text-foreground transition-colors hover:text-primary"
         >
-          {name}
+          SK
         </a>
 
         <ul className="hidden items-center gap-1 lg:flex">
@@ -74,18 +76,6 @@ export function Navbar({ name, resumeUrl }: { name: string; resumeUrl: string | 
               </a>
             </li>
           ))}
-          {resumeUrl && (
-            <li>
-              <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="ml-2 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-              >
-                <Download className="h-3.5 w-3.5" /> Resume
-              </a>
-            </li>
-          )}
         </ul>
 
         <button
@@ -140,18 +130,6 @@ export function Navbar({ name, resumeUrl }: { name: string; resumeUrl: string | 
               </a>
             </li>
           ))}
-          {resumeUrl && (
-            <li>
-              <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mt-1 block rounded-lg bg-primary/10 px-3 py-3 text-base text-primary"
-              >
-                Download Resume
-              </a>
-            </li>
-          )}
         </ul>
       </div>
     </header>
