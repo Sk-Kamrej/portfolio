@@ -68,7 +68,7 @@ export function About({ profile }: { profile: Profile }) {
         </Reveal>
 
         {/* RIGHT SIDE */}
-        <Reveal delay={160} className="-mt-34">
+        <Reveal delay={160} className="-mt-4">
           <div className="relative">
             {/* Glow */}
             <div

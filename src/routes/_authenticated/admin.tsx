@@ -151,8 +151,8 @@ const tabs: Tab[] = [
     label: "Certifications",
     table: "certifications",
     fields: [
-      { key: "title", label: "Title" },
-      { key: "issuer", label: "Issuer" },
+      { key: "name", label: "Title" },
+      { key: "organization", label: "Issuer" },
       { key: "issue_date", label: "Issue date" },
       { key: "credential_id", label: "Credential ID" },
       { key: "credential_url", label: "Credential URL" },
